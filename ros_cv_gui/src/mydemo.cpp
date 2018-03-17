@@ -4,12 +4,13 @@
 #include <QDebug>
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <yaml-cpp/yaml.h>
 
-#define BOXFILTER       QString("BoxFilter")
-#define MEANBLUR        QString("MeanBlur")
-#define GAUSSIANBLUR    QString("GaussianBlur")
-#define ORIGIANIMG      QString("Original")
+#define BOXFILTER       std::string("BoxFilter")
+#define MEANBLUR        std::string("MeanBlur")
+#define GAUSSIANBLUR    std::string("GaussianBlur")
+#define ORIGIANIMG      std::string("Original")
 
 mydemo::mydemo(QWidget *parent) :
     QWidget(parent),
@@ -27,7 +28,7 @@ mydemo::mydemo(QWidget *parent) :
     connect(ui->radioButton_3, SIGNAL(toggled(bool)), this, SLOT(slot_toggle3(bool)));
     connect(ui->verticalSlider, &QSlider::valueChanged, this, &mydemo::slot_imgPro);
 
-    ui->label_txt->setText(ORIGIANIMG);
+    ui->label_txt->setText(QString::fromStdString(ORIGIANIMG));
 
     int argc = 0; char **argv = NULL;
     ros::init(argc, argv, "ros_cv_gui");
@@ -56,29 +57,29 @@ void mydemo::slot_open()
     YAML::Node yamlConfig = YAML::LoadFile(yamlfile);
     std::string str_param = yamlConfig["filter_type"].as<std::string>();
     int int_param = yamlConfig["value"].as<int>();
-    if("box" == str_param)
+    if(BOXFILTER == str_param)
     {
         m_type = Box;
         ui->radioButton->setChecked(true);
-        ui->label_txt->setText(BOXFILTER);
+        ui->label_txt->setText(QString::fromStdString(BOXFILTER));
     }
-    else if("mean" == str_param)
+    else if(MEANBLUR == str_param)
     {
         m_type = Mean;
         ui->radioButton_2->setChecked(true);
-        ui->label_txt->setText(MEANBLUR);
+        ui->label_txt->setText(QString::fromStdString(MEANBLUR));
     }
-    else if("gaussian" == str_param)
+    else if(GAUSSIANBLUR == str_param)
     {
         m_type = Gaussian;
         ui->radioButton_3->setChecked(true);
-        ui->label_txt->setText(GAUSSIANBLUR);
+        ui->label_txt->setText(QString::fromStdString(GAUSSIANBLUR));
     }
     else
     {
         m_type = Original;
         int_param = 0;
-        ui->label_txt->setText(ORIGIANIMG);
+        ui->label_txt->setText(QString::fromStdString(ORIGIANIMG));
     }
     ui->verticalSlider->setValue(int_param);
     ui->lineEdit->setText(QString::number(int_param));
@@ -93,7 +94,7 @@ void mydemo::slot_toggle1(bool checked)
         onBoxFilter(0);
         ui->verticalSlider->setValue(0);
         ui->lineEdit->setText(QString::number(0));
-        ui->label_txt->setText(BOXFILTER);
+        ui->label_txt->setText(QString::fromStdString(BOXFILTER));
     }
 }
 
@@ -105,7 +106,7 @@ void mydemo::slot_toggle2(bool checked)
         onMeanBlur(0);
         ui->verticalSlider->setValue(0);
         ui->lineEdit->setText(QString::number(0));
-        ui->label_txt->setText(MEANBLUR);
+        ui->label_txt->setText(QString::fromStdString(MEANBLUR));
     }
 }
 
@@ -117,7 +118,7 @@ void mydemo::slot_toggle3(bool checked)
         onGaussian(0);
         ui->verticalSlider->setValue(0);
         ui->lineEdit->setText(QString::number(0));
-        ui->label_txt->setText(GAUSSIANBLUR);
+        ui->label_txt->setText(QString::fromStdString(GAUSSIANBLUR));
     }
 }
 
@@ -180,7 +181,7 @@ void mydemo::slot_save()
     std::string yamlfile = "/home/xlh/param.yaml";
     YAML::Node yamlConfig = YAML::LoadFile(yamlfile);
     yamlConfig["value"] = ui->verticalSlider->value();
-    //yamlConfig["filter_type"] = "";
+    yamlConfig["filter_type"] = (ui->label_txt->text()).toStdString();
 
     std::ofstream file;
     file.open(yamlfile.c_str());
