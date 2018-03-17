@@ -53,7 +53,7 @@ void mydemo::slot_open()
         imageShow(m_image);
     }
     
-    std::string yamlfile = "/home/xlh/param.yaml";
+    std::string yamlfile = "/home/user/param.yaml";
     YAML::Node yamlConfig = YAML::LoadFile(yamlfile);
     std::string str_param = yamlConfig["filter_type"].as<std::string>();
     int int_param = yamlConfig["value"].as<int>();
@@ -178,7 +178,7 @@ void mydemo::imageShow(cv::Mat matImg)
 
 void mydemo::slot_save()
 {
-    std::string yamlfile = "/home/xlh/param.yaml";
+    std::string yamlfile = "/home/user/param.yaml";
     YAML::Node yamlConfig = YAML::LoadFile(yamlfile);
     yamlConfig["value"] = ui->verticalSlider->value();
     yamlConfig["filter_type"] = (ui->label_txt->text()).toStdString();
