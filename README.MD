@@ -19,4 +19,7 @@ git clone the project from the corrent URL
     $ source devel/setup.bash
 ```
 
-Then, "rosrun ros_cv_gui ros_cv_gui_node" to test the project.
+Then, "rosrun ros_cv_gui ros_cv_gui_node" to test the project. Note the right YAML file path. The effect may work like below:
+
+![ros_cv_qt_gui](docs/images/ros_cv_qt_gui.png)
+
